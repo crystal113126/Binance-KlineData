@@ -31,16 +31,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BinanceApiServiceTest {
 
-    private Kline klineData = new Kline("BTCUSDT", 1523577660000L, 1523577719999L, BigDecimal.valueOf(7935.54), BigDecimal.valueOf(7954.99), BigDecimal.valueOf(7930.09), BigDecimal.valueOf(7945.67), BigDecimal.valueOf(59), BigDecimal.valueOf(88975.22), 3456, BigDecimal.valueOf(34565.1), BigDecimal.valueOf(3456.1));
-
     @Mock
     private RestTemplate restTemplate;
-
     @InjectMocks
     private BinanceApiService binanceApiService = new BinanceApiService();
-
-
-    private static final int MAX_LIMITED = 500;
 
     @BeforeEach
     public void setUp() {
@@ -61,7 +55,6 @@ class BinanceApiServiceTest {
         List<Kline> actualKlines = binanceApiService.queryKline(symbol, 1233L, 1237L);
         assertThat(actualKlines).isNotNull();
     }
-
 
     @Test
     void testQuerySymbolWithExistingSymbol() throws NoSuchFieldException, IllegalAccessException {
