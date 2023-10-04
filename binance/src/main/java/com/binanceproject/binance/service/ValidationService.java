@@ -53,7 +53,7 @@ public class ValidationService {
     public void isExistingSymbol(String symbol) {
         if (binanceRepository.findAllOfSymbol(symbol).isEmpty())
             throw new InvalidInputException(
-                    String.format(" This symbol %s is not existing.", symbol ));
+                    String.format("This symbol %s does not exist.", symbol ));
     }
 
 }

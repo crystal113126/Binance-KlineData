@@ -54,7 +54,6 @@ class BinanceControllerTest {
                 .thenReturn(expectedData);
         // Call the controller method
         List<Kline> result = binanceController.getKlineData(EXISTING_SYMBOL, VALID_START_TIME, VALID_END_TIME, INTERVAL);
-
         //Then
         assertThat(result).isEqualTo(expectedData);
     }
@@ -64,7 +63,6 @@ class BinanceControllerTest {
         //When
         doNothing().when(validationService).isValidSymbol(EXISTING_SYMBOL);
         doNothing().when(validationService).isValidTime(VALID_START_TIME, VALID_END_TIME);
-
         binanceController.loadKlineData(EXISTING_SYMBOL, VALID_START_TIME, VALID_END_TIME);
 
         Mockito.verify(loadService, Mockito.times(1)).loadData(EXISTING_SYMBOL, VALID_START_TIME, VALID_END_TIME);
@@ -83,6 +81,4 @@ class BinanceControllerTest {
         assertThrows(InvalidInputException.class, () -> binanceController.loadKlineData(NON_EXISTING_SYMBOL, VALID_START_TIME, VALID_END_TIME));
     }
 
-
-
-    }
+}

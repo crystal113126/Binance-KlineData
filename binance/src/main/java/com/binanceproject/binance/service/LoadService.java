@@ -29,7 +29,6 @@ public class LoadService {
         long maxIntervalTime = INTERVAL * MAX_LIMITED;
         LongStream.range(startTime, endTime)
                 .filter(t -> (t-startTime)%maxIntervalTime == 0)
-                //.sequential()
                 .parallel()
                 .forEach(t->{
                     long end = t + maxIntervalTime - 1 > endTime ? endTime - 1 : t + maxIntervalTime - 1;

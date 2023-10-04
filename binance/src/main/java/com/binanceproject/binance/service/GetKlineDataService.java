@@ -19,19 +19,6 @@ public class GetKlineDataService {
     private BinanceRepository binanceRepository;
 
     /**
-     * Retrieves Kline data for a specific trading symbol within a given time interval with default size.
-     *
-     * @param symbol    The trading symbol for which to retrieve Kline data.
-     * @param startTime The starting time of the data interval.
-     * @param endTime   The ending time of the data interval.
-     * @return A list of Kline objects representing the requested data.
-     */
-
-    public List<Kline> getKlineData(@NotNull String symbol, @NotNull Long startTime, @NotNull Long endTime) {
-        return binanceRepository.findSymbolAndOpenTimeAndCloseTime(symbol, startTime, endTime);
-    }
-
-    /**
      * Retrieves Kline data for a specific trading symbol within a given time interval and specified interval size.
      *
      * @param symbol        The trading symbol for which to retrieve Kline data.
@@ -40,7 +27,6 @@ public class GetKlineDataService {
      * @param intervalSize  The size of intervals for grouping Kline data.
      * @return              A list of Kline objects representing the grouped data.
      */
-
     public List<Kline> getKlineDataInterval(@NotNull String symbol, @NotNull Long startTime, @NotNull  Long endTime, @NotNull int intervalSize) {
         List<Kline> initialData = binanceRepository.findSymbolAndOpenTimeAndCloseTime(symbol, startTime, endTime);
         return IntStream.range(0, initialData.size())
@@ -50,9 +36,7 @@ public class GetKlineDataService {
                     int endIndex = Math.min(i + intervalSize, initialData.size());
                     return Kline.mapKlineData(initialData, i, endIndex);
                 }).toList();
-
     }
-
 
 }
 
