@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/binance")
 public class BinanceController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private LoadService loadService;
     @Autowired
@@ -31,18 +31,17 @@ public class BinanceController {
      * @param symbol    The symbol for which Kline data is requested.
      * @param startTime The starting time of the data interval.
      * @param endTime   The ending time of the data interval
+     * @param interval  The time range of output data (1-> 1min)
      * @return  A list of Kline objects representing the requested data.
      */
-
-    @GetMapping("/binance")
+    @GetMapping("/kline")
     @ResponseStatus(HttpStatus.OK)
-    public List<Kline> getKlineData(@RequestParam @NotNull String symbol, @RequestParam Long startTime, @RequestParam Long endTime, @RequestParam int interval) {
+    public List<Kline> getKlineData(@RequestParam @NotNull String symbol, @RequestParam Long startTime, @RequestParam Long endTime, @RequestParam Integer interval) {
         // validation
         validationService.isExistingSymbol(symbol);
         validationService.isValidTime(startTime, endTime);
         // Fetch Kline data
         return getKlineDataService.getKlineDataInterval(symbol, startTime, endTime, interval);
-
     }
 
     /**
@@ -52,8 +51,7 @@ public class BinanceController {
      * @param startTime The starting time of the data interval to load.
      * @param endTime   The ending time of the data interval to load.
      */
-
-    @PutMapping("/binance/load")
+    @PostMapping("/load")
     @ResponseStatus(HttpStatus.CREATED)
     public void loadKlineData(@RequestParam @NotNull String symbol, @RequestParam Long startTime, @RequestParam Long endTime) {
         // validation

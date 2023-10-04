@@ -1,5 +1,6 @@
 package com.binanceproject.binance.model;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -15,55 +16,30 @@ import java.util.List;
 @Data
 public class Kline {
 
-    @NotNull
+    @NotBlank
     private String symbol;
-
+    @NotNull
     private Long klineOpenTime;
-
+    @NotNull
     private Long klineCloseTime;
-
+    @NotNull
     private BigDecimal openPrice;
-
+    @NotNull
     private BigDecimal highPrice;
-
+    @NotNull
     private BigDecimal lowPrice;
-
+    @NotNull
     private BigDecimal closePrice;
-
+    @NotNull
     private BigDecimal volume;
-
+    @NotNull
     private BigDecimal quoteAssetVolume;
-
+    @NotNull
     private Integer numberOfTrades;
-
+    @NotNull
     private BigDecimal takerBuyBaseAssetVolume;
-
+    @NotNull
     private BigDecimal takerBuyQuoteAssetVolume;
-
-
-    /**
-     * Creates a Kline object from an array of input data and associates it with a specific symbol.
-     *
-     * @param inputData The input data array containing Kline attributes.
-     * @param symbol    The symbol associated with this Kline data.
-     * @return          A Kline object representing the input data.
-     */
-    public static Kline covertToKline(String[] inputData, String symbol) {
-        Kline klineData = new Kline();
-        klineData.setSymbol(symbol);
-        klineData.setKlineOpenTime(Long.parseLong(inputData[0]));
-        klineData.setOpenPrice(new BigDecimal(inputData[1]));
-        klineData.setHighPrice(new BigDecimal(inputData[2]));
-        klineData.setLowPrice(new BigDecimal(inputData[3]));
-        klineData.setClosePrice(new BigDecimal(inputData[4]));
-        klineData.setVolume(new BigDecimal(inputData[5]));
-        klineData.setKlineCloseTime(Long.parseLong(inputData[6]));
-        klineData.setQuoteAssetVolume(new BigDecimal(inputData[7]));
-        klineData.setNumberOfTrades(Integer.valueOf(inputData[8]));
-        klineData.setTakerBuyBaseAssetVolume(new BigDecimal(inputData[9]));
-        klineData.setTakerBuyQuoteAssetVolume(new BigDecimal(inputData[10]));
-        return klineData;
-    }
 
     /**
      * Combines a list of Kline data into a single Kline object based on a specified range.
@@ -73,11 +49,11 @@ public class Kline {
      * @param end         The ending index of the range.
      * @return            A Kline object representing the combined data within the specified range.
      */
-    public static Kline mapKlineData(List<Kline> initialData, int start, int end) {
-        List<Kline> subList = initialData.subList(start, end);
-        Kline firstKline = subList.get(0);
+    public static Kline mapKlineData(List<Kline> initialData, Integer start, Integer end) {
+//        List<Kline> subList = initialData.subList(start, end);
+        Kline firstKline = initialData.get(start);
+        Kline endKline = initialData.get(end - 1);
         Kline newData = new Kline();
-        int endIndex = subList.size() - 1;
         BigDecimal maxHighPrice = BigDecimal.ZERO;
         BigDecimal minLowPrice = firstKline.getLowPrice();
         BigDecimal volume = BigDecimal.ZERO;
@@ -88,11 +64,12 @@ public class Kline {
 
         newData.setSymbol(firstKline.getSymbol());
         newData.setKlineOpenTime(firstKline.getKlineOpenTime());
-        newData.setKlineCloseTime(subList.get(endIndex).getKlineCloseTime());
+        newData.setKlineCloseTime(endKline.getKlineCloseTime());
         newData.setOpenPrice(firstKline.getOpenPrice());
-        newData.setClosePrice(subList.get(endIndex).getClosePrice());
+        newData.setClosePrice(endKline.getClosePrice());
 
-        for (Kline kline : subList) {
+        for (int i = start; i < end; i++) {
+            Kline kline = initialData.get(i);
             maxHighPrice = maxHighPrice.max(kline.getHighPrice());
             minLowPrice = minLowPrice.min(kline.getLowPrice());
             volume = volume.add(kline.getVolume());
