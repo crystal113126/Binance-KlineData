@@ -1,6 +1,8 @@
 package com.binanceproject.binance.controller;
 
 import com.binanceproject.binance.model.Kline;
+import com.binanceproject.binance.model.KlineDTO;
+import com.binanceproject.binance.repository.KlineDAO;
 import com.binanceproject.binance.service.GetKlineDataService;
 import com.binanceproject.binance.service.LoadService;
 import com.binanceproject.binance.service.ValidationService;
@@ -24,6 +26,9 @@ public class BinanceController {
     private GetKlineDataService getKlineDataService;
     @Autowired
     private ValidationService validationService;
+
+    @Autowired
+    private KlineDAO klineDAO;
 
     /**
      *Retrieves Kline data for a specific symbol within requested time interval
@@ -58,5 +63,13 @@ public class BinanceController {
         validationService.isValidSymbol(symbol);
         validationService.isValidTime(startTime, endTime);
         loadService.loadData(symbol, startTime, endTime);
+    }
+
+    public List<Kline> getKlineData2(@RequestParam @NotNull String symbol, @RequestParam Long startTime, @RequestParam Long endTime, @RequestParam Integer interval) {
+        // validation
+        validationService.isExistingSymbol(symbol);
+        validationService.isValidTime(startTime, endTime);
+        // Fetch Kline data
+        return getKlineDataService.getKlineDataInterval(symbol, startTime, endTime, interval);
     }
 }
